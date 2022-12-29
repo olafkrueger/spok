@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app>
     <v-app-bar app style="backdrop-filter: blur(10px)" clipped-right>
       <v-spacer />
       <v-divider class="mx-4" vertical />
@@ -14,6 +14,21 @@
       hide-overlay
       width="800"
     >
+      <v-card v-if="selectedItem" flat tile>
+        <v-toolbar tile>
+          <v-btn icon @click="showPreview = !showPreview"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </v-toolbar>
+        <v-card-title>Beschreibung</v-card-title>
+        <v-card-text>
+          <span v-html="selectedItem.description"></span>
+        </v-card-text>
+        <v-card-title> Kommentar </v-card-title>
+        <v-card-text>
+          <span v-html="selectedItem.kommentar"></span>
+        </v-card-text>
+      </v-card>
     </v-navigation-drawer>
 
     <v-main>
@@ -79,39 +94,6 @@
                   </v-col>
                 </template>
               </v-row>
-              <v-chip-group
-                v-if="getFilter('status').multiple == true"
-                v-model="getFilter('status').selectedItems"
-                active-class="primary--text"
-                column
-                :multiple="getFilter('status').multiple"
-                class="mt-3"
-                @change="updateAndApplyFilters('status')"
-              >
-                <v-chip
-                  v-for="item in getFilter('status').items.filter(
-                    (item) => item.count > 0
-                  )"
-                  :key="item.value"
-                  :value="item.value"
-                  filter
-                  :ripple="false"
-                  outlined
-                  small
-                  ><v-icon left>{{ statusIconMap[item.value] }}</v-icon
-                  >{{ item.value + " (" + item.count + ")" }}</v-chip
-                >
-              </v-chip-group>
-              <v-chip-group
-                v-else
-                v-model="getFilter('status').selectedItem"
-                active-class="primary--text"
-                column
-                class="mt-3"
-                :multiple="getFilter('status').multiple"
-                @change="updateAndApplyFilters('status')"
-              >
-              </v-chip-group>
             </v-container>
           </v-card>
           <v-card flat>
@@ -130,16 +112,14 @@
             <v-data-table
               v-model="selectedItems"
               v-resize="onResize"
-              :items="filteredGames"
+              :items="gamesFiltered"
               dense
               :search="searchPhrase"
               :headers="headers"
               fixed-header
               :height="tableHeight"
-              :sort-by="['createdAt']"
-              :sort-desc="[true]"
               multi-sort
-              item-key="id"
+              item-key="field3"
               :items-per-page="100"
               single-select
               :show-select="false"
@@ -147,20 +127,23 @@
               class="text-body-2"
               @click:row="onItemClick"
             >
-              <template #[`item.name`]="{ item }">
-                <router-link
-                  :to="{
-                    name: 'prototyping.companies.company-id.work-orders.work-order-id',
-                    params: { companyId: companyId, workOrderId: item.id },
-                  }"
-                  >{{ item.name }}
-                </router-link>
+              <template #[`item.description`]="{ item }">
+                <span
+                  v-html="
+                    item.description.length > 100
+                      ? item.description.substring(0, 100 - 3) + '...'
+                      : item.description
+                  "
+                ></span>
               </template>
-              <template #[`item.status`]="{ item }">
-                <status-chip
-                  :enumeral="statusEnumerationMap[item.status]"
-                  small
-                />
+              <template #[`item.kommentar`]="{ item }">
+                <span
+                  v-html="
+                    item.kommentar.length > 100
+                      ? item.kommentar.substring(0, 100 - 3) + '...'
+                      : item.kommentar
+                  "
+                ></span>
               </template>
               <template #[`item.sapCarType`]="{ item }">
                 <v-tooltip top>
@@ -232,118 +215,65 @@
         </v-card>
       </v-container>
     </v-main>
-  </div>
+  </v-app>
 </template>
 
 <script>
 import dataFilter from "@/utils/data-filter.js";
+import games from "./games-100.json";
 
 export default {
   name: "MainApp",
   components: {},
-  props: {
-    companyId: { type: String, required: true },
-  },
+  props: {},
   data: () => ({
     httpError: null,
+    foo: null,
     workOrders: [],
-    filteredGames: [],
+    gamesFiltered: [],
     showPreview: false,
     statusEnumeration: [],
-    filteredWorkOrders: [],
     pendingChangeRequests: [],
     isLoading: false,
     isEnumerationLoading: false,
     searchPhrase: null,
+    selectedItem: null,
     selectedItems: [],
     tableHeight: null,
     availableFilters: [
       {
-        field: "status",
-        title: "Status",
+        field: "name",
+        title: "Name",
         selectedItems: [],
         selectedItem: "",
-        initialItems: [
-          { value: "new", count: -1 },
-          { value: "accepted", count: -1 },
-          { value: "not_accepted", count: -1 },
-          { value: "in_progress", count: -1 },
-          { value: "attention", count: -1 },
-          { value: "in_revision", count: -1 },
-          { value: "paused", count: -1 },
-          { value: "finished", count: -1 },
-          { value: "closed", count: -1 },
-          { value: "canceled", count: -1 },
-          { value: "unknown", count: -1 },
-        ],
-        reactive: true,
+        initialItems: [],
+        reactive: false,
         exclude: [],
         items: [],
-        multiple: false,
-        visible: false,
+        multiple: true,
+        visible: true,
         sort: false,
       },
       {
-        field: "createdByFullName",
-        title: "Issuer",
+        field: "poolid",
+        title: "poolid",
         selectedItems: [],
+        selectedItem: "",
         initialItems: [],
-        reactive: true,
+        reactive: false,
         exclude: [],
         items: [],
         multiple: true,
         visible: true,
-        sort: true,
-      },
-      {
-        field: "sapCustomer",
-        title: "Customer",
-        selectedItems: [],
-        initialItems: [],
-        reactive: true,
-        exclude: [],
-        items: [],
-        multiple: true,
-        visible: true,
-        sort: true,
-      },
-      {
-        field: "sapCarType",
-        title: "Car type",
-        selectedItems: [],
-        initialItems: [],
-        reactive: true,
-        exclude: [],
-        items: [],
-        multiple: true,
-        visible: true,
-        sort: true,
-      },
-      {
-        field: "sapProductSegment",
-        title: "Product segment",
-        selectedItems: [],
-        initialItems: [],
-        reactive: true,
-        exclude: [],
-        items: [],
-        multiple: true,
-        visible: true,
-        sort: true,
+        sort: false,
       },
     ],
     headers: [
-      { text: "Order no.", value: "name", width: 120 },
-      { text: "Status", value: "status" },
-      { text: "Company code", value: "sapCompanyCode" },
-      { text: "Customer", value: "sapCustomer" },
-      { text: "Car type", value: "sapCarType" },
-      { text: "Segment", value: "sapProductSegment" },
-      { text: "Created by", value: "createdByFullName" },
-      { text: "Subject", value: "subject" },
-      { text: "Number of Parts", value: "numberOfParts" },
-      { text: "Created at", value: "createdAt" },
-      { text: "Target date", value: "targetDate" },
+      { text: "gameId", value: "gameid", width: 120 },
+      { text: "poolId", value: "poolid" },
+      { text: "name", value: "name" },
+      { text: "description", value: "description" },
+      { text: "kommentar", value: "kommentar" },
     ],
   }),
   computed: {
@@ -367,17 +297,15 @@ export default {
     },
   },
   watch: {},
-  async mounted() {
-    const csvtojsonV2 = require("csvtojson");
-    this.filteredGames = await csvtojsonV2().fromFile("../data/games.csv");
+  mounted() {
+    this.gamesFiltered = dataFilter.applyFilters(games, this.availableFilters);
+    dataFilter.initFilters(games, this.availableFilters);
+    this.onResize();
   },
 
   methods: {
-    async init(companyId) {
-      this.fetchChangeRequests();
-      await this.fetchStatusEnumeration();
-      await this.fetchWorkOrders(companyId);
-      this.filteredWorkOrders = dataFilter.applyFilters(
+    async init() {
+      this.gamesFiltered = dataFilter.applyFilters(
         this.workOrders,
         this.availableFilters
       );
@@ -388,14 +316,15 @@ export default {
       return this.availableFilters.filter((item) => item.field === field)[0];
     },
     updateAndApplyFilters(field) {
+      console.log("updateAndApplyFilters");
       // Apply filters on work order list
-      this.filteredWorkOrders = dataFilter.applyFilters(
-        this.workOrders,
+      this.gamesFiltered = dataFilter.applyFilters(
+        games,
         this.availableFilters
       );
       // Update filter items
       this.availableFilters = dataFilter.updateFilters(
-        this.workOrders,
+        games,
         this.availableFilters,
         field
       );
@@ -421,10 +350,10 @@ export default {
       // )
     },
     replaceWorkOrder(workOrder) {
-      let index = this.filteredWorkOrders.findIndex(
+      let index = this.gamesFiltered.findIndex(
         (item) => item.id === workOrder.id
       );
-      this.filteredWorkOrders[index].status = workOrder.status;
+      this.gamesFiltered[index].status = workOrder.status;
 
       index = this.workOrders.findIndex((item) => item.id === workOrder.id);
       this.workOrders[index].status = workOrder.status;
@@ -435,22 +364,13 @@ export default {
     onItemClick(item, row) {
       // Highlight selected row (See custom style "tr.v-data-table__selected")
       row.select(true);
+      this.selectedItem = item;
       this.showPreview = true;
     },
     onResize() {
       this.tableHeight = window.innerHeight - 480;
     },
-    async fetchWorkOrders(companyId) {
-      this.isLoading = true;
-      try {
-        this.workOrders = (
-          await this.$api.prototypingGetWorkOrdersByCompany(companyId)
-        ).data;
-      } catch (err) {
-        this.httpError = err;
-      }
-      this.isLoading = false;
-    },
+    async fetchWorkOrders() {},
     async fetchStatusEnumeration() {
       try {
         this.isEnumerationLoading = true;
@@ -472,9 +392,7 @@ export default {
     gotoChangeRequests() {
       this.$router.push({
         name: "prototyping.companies.company-id.work-orders.change-requests",
-        params: {
-          companyId: this.companyId,
-        },
+        params: {},
       });
     },
   },
