@@ -273,7 +273,11 @@ export default {
       { text: "poolId", value: "poolid" },
       { text: "name", value: "name" },
       { text: "description", value: "description" },
-      { text: "kommentar", value: "kommentar" },
+      { text: "kategorie1", value: "kategorie1" },
+      { text: "kategorie2", value: "kategorie2" },
+      { text: "kategorie3", value: "kategorie3" },
+      { text: "kategorie4", value: "kategorie4" },
+      { text: "kategorie5", value: "kategorie5" },
     ],
   }),
   computed: {
