@@ -220,7 +220,7 @@
 
 <script>
 import dataFilter from "@/utils/data-filter.js";
-import games from "./games-100.json";
+import games from "../data/gamesJoined.json";
 
 export default {
   name: "MainApp",
@@ -255,8 +255,21 @@ export default {
         sort: false,
       },
       {
-        field: "poolid",
-        title: "poolid",
+        field: "poolTitle",
+        title: "poolTitle",
+        selectedItems: [],
+        selectedItem: "",
+        initialItems: [],
+        reactive: false,
+        exclude: [],
+        items: [],
+        multiple: true,
+        visible: true,
+        sort: false,
+      },
+      {
+        field: "kategorie1",
+        title: "kategorie1",
         selectedItems: [],
         selectedItem: "",
         initialItems: [],
@@ -271,9 +284,11 @@ export default {
     headers: [
       { text: "gameId", value: "gameid", width: 120 },
       { text: "poolId", value: "poolid" },
+      { text: "poolTitle", value: "poolTitle" },
       { text: "name", value: "name" },
       { text: "description", value: "description" },
       { text: "kategorie1", value: "kategorie1" },
+      { text: "kategorie1Name", value: "kategorie1Name" },
       { text: "kategorie2", value: "kategorie2" },
       { text: "kategorie3", value: "kategorie3" },
       { text: "kategorie4", value: "kategorie4" },
