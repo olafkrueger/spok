@@ -27,6 +27,8 @@
  */
 const applyFilters = function (data, filters) {
   let check = true;
+  let check1 = true;
+  let check2 = false;
   let myFields = fields(filters);
   let mySelectedValues = [];
 
@@ -37,12 +39,24 @@ const applyFilters = function (data, filters) {
 
   return data.filter(function (item) {
     check = true;
+    check1 = true;
+    check2 = false; // In case of an array we need to invert the logic because we need to check for an array additionally
     myFields.forEach((field) => {
       mySelectedValues = selectedValuesMap.get(field);
       if (
         mySelectedValues.length > 0 &&
         mySelectedValues.includes(item[field]) == false
       ) {
+        check1 = false;
+      }
+      if (
+        mySelectedValues.length > 0 &&
+        Array.isArray(item[field]) &&
+        findCommonElements(mySelectedValues, item[field]) == true
+      ) {
+        check2 = true;
+      }
+      if (check1 == false && check2 == false) {
         check = false;
       }
     });
@@ -160,12 +174,24 @@ const aggregate = function (data, field, initialValues = null) {
   for (let i = 0; i < data.length; i++) {
     // Ensure that 'field' is string or number (We don't check it here)
     key = data[i][field];
-    if (!aggregationMap.has(key)) {
-      aggregationMap.set(key, 1);
+    if (Array.isArray(key)) {
+      key.forEach(value => {
+        if (!aggregationMap.has(value)) {
+          aggregationMap.set(value, 1);
+        } else {
+          count = aggregationMap.get(value);
+          count++;
+          aggregationMap.set(value, count);
+        }
+      });
     } else {
-      count = aggregationMap.get(key);
-      count++;
-      aggregationMap.set(key, count);
+      if (!aggregationMap.has(key)) {
+        aggregationMap.set(key, 1);
+      } else {
+        count = aggregationMap.get(key);
+        count++;
+        aggregationMap.set(key, count);
+      }
     }
   }
 
@@ -242,6 +268,13 @@ const convertMapToArray = function (map) {
   return arr;
 };
 
+// Iterate through each element in the
+// first array and if some of them
+// include the elements in the second
+// array then return true.
+const findCommonElements = function (arr1, arr2) {
+  return arr1.some(item => arr2.includes(item));
+};
 
 // Dev utils
 // eslint-disable-next-line 
@@ -250,6 +283,7 @@ const logMapElements = function logMapElements(value, key, map) {
   /* eslint-disable-next-line no-console */
   console.log(`m[${key}] = ${value}`);
 };
+
 
 
 module.exports = {
