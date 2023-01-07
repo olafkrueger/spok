@@ -20,14 +20,16 @@
             ><v-icon>mdi-close</v-icon></v-btn
           >
         </v-toolbar>
-        <v-card-title>Beschreibung</v-card-title>
-        <v-card-text>
-          <span v-html="selectedItem.description"></span>
-        </v-card-text>
-        <v-card-title> Kommentar </v-card-title>
-        <v-card-text>
-          <span v-html="selectedItem.kommentar"></span>
-        </v-card-text>
+        <v-card flat tile class="px-10">
+          <v-card-title>Beschreibung</v-card-title>
+          <v-card-text>
+            <span v-html="selectedItem.description"></span>
+          </v-card-text>
+          <v-card-title> Kommentar </v-card-title>
+          <v-card-text>
+            <span v-html="selectedItem.kommentar"></span>
+          </v-card-text>
+        </v-card>
       </v-card>
     </v-navigation-drawer>
 
@@ -119,7 +121,7 @@
               fixed-header
               :height="tableHeight"
               multi-sort
-              item-key="field3"
+              item-key="gameid"
               :items-per-page="100"
               single-select
               :show-select="false"
@@ -295,11 +297,11 @@ export default {
       },
     ],
     headers: [
-      { text: "gameId", value: "gameid", width: 120 },
+      { text: "gameId", value: "gameid", width: 50 },
       //{ text: "poolId", value: "poolid" },
       { text: "poolTitle", value: "poolTitle" },
       { text: "gameName", value: "name" },
-      { text: "description", value: "description" },
+      //{ text: "description", value: "description" },
       //{ text: "kategorie1", value: "kategorie1" },
       { text: "kategorie1TagNames", value: "kategorie1TagNames" },
       //{ text: "kategorie2", value: "kategorie2" },
