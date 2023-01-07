@@ -145,69 +145,77 @@
                   "
                 ></span>
               </template>
-              <template #[`item.sapCarType`]="{ item }">
-                <v-tooltip top>
-                  <template #activator="{ on, attrs }">
-                    <span v-bind="attrs" v-on="on">{{ item.sapCarType }}</span>
-                  </template>
-                  <span>{{ "ZTyp: " + item.carTypeId }}</span>
-                </v-tooltip>
-              </template>
-              <template #[`item.createdByFullName`]="{ item }">
-                <v-tooltip top>
-                  <template #activator="{ on, attrs }">
-                    <v-avatar
-                      :color="item.createdByAvatarColor"
-                      size="32"
-                      class="ma-1"
-                      v-bind="attrs"
-                      v-on="on"
-                      ><span class="white--text">{{
-                        item.createdByInitials
-                      }}</span></v-avatar
-                    >
-                  </template>
-                  <span>{{ item.createdByFullName }}</span>
-                </v-tooltip>
-              </template>
-              <template #[`item.agentFullName`]="{ item }">
-                <v-tooltip top>
-                  <template #activator="{ on, attrs }">
-                    <v-avatar
-                      :color="item.agentAvatarColor"
-                      size="32"
-                      class="ma-1"
-                      v-bind="attrs"
-                      v-on="on"
-                      ><span class="white--text">{{
-                        item.agentInitials
-                      }}</span></v-avatar
-                    >
-                  </template>
-                  <span>{{ item.agentFullName }}</span>
-                </v-tooltip>
-              </template>
-              <template #[`item.createdAt`]="{ item }">
-                <v-chip v-if="item.createdAt" small outlined>{{
-                  $d(new Date(item.createdAt), "middle")
-                }}</v-chip>
-              </template>
 
-              <template #[`item.targetDate`]="{ item }">
-                <template v-if="item.targetDate">
+              <template #[`item.kategorie1TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie1TagNames)">
                   <v-chip
-                    v-if="!['closed', 'canceled'].includes(item.status)"
-                    small
-                    :color="
-                      new Date(item.targetDate) > new Date()
-                        ? 'success'
-                        : 'error'
-                    "
-                    >{{ $d(new Date(item.targetDate), "short") }}</v-chip
+                    v-for="tagName in item.kategorie1TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
                   >
-                  <v-chip v-else small outlined>{{
-                    $d(new Date(item.targetDate), "short")
-                  }}</v-chip>
+                </template>
+              </template>
+              <template #[`item.kategorie2TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie2TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie2TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
+              <template #[`item.kategorie3TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie3TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie3TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
+              <template #[`item.kategorie4TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie4TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie4TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
+              <template #[`item.kategorie5TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie5TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie5TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
+              <template #[`item.kategorie6TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie6TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie6TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
                 </template>
               </template>
             </v-data-table>
@@ -268,8 +276,8 @@ export default {
         sort: false,
       },
       {
-        field: "kategorie1",
-        title: "kategorie1",
+        field: "kategorie6",
+        title: "kategorie6",
         selectedItems: [],
         selectedItem: "",
         initialItems: [],
@@ -283,16 +291,22 @@ export default {
     ],
     headers: [
       { text: "gameId", value: "gameid", width: 120 },
-      { text: "poolId", value: "poolid" },
+      //{ text: "poolId", value: "poolid" },
       { text: "poolTitle", value: "poolTitle" },
-      { text: "name", value: "name" },
+      { text: "gameName", value: "name" },
       { text: "description", value: "description" },
-      { text: "kategorie1", value: "kategorie1" },
-      { text: "kategorie1Name", value: "kategorie1Name" },
-      { text: "kategorie2", value: "kategorie2" },
-      { text: "kategorie3", value: "kategorie3" },
-      { text: "kategorie4", value: "kategorie4" },
-      { text: "kategorie5", value: "kategorie5" },
+      //{ text: "kategorie1", value: "kategorie1" },
+      { text: "kategorie1TagNames", value: "kategorie1TagNames" },
+      //{ text: "kategorie2", value: "kategorie2" },
+      { text: "kategorie2TagNames", value: "kategorie2TagNames" },
+      //{ text: "kategorie3", value: "kategorie3" },
+      { text: "kategorie3TagNames", value: "kategorie3TagNames" },
+      //{ text: "kategorie4", value: "kategorie4" },
+      { text: "kategorie4TagNames", value: "kategorie4TagNames" },
+      //{ text: "kategorie5", value: "kategorie5" },
+      { text: "kategorie5TagNames", value: "kategorie5TagNames" },
+      { text: "kategorie6", value: "kategorie6" },
+      { text: "kategorie6TagNames", value: "kategorie6TagNames" },
     ],
   }),
   computed: {
