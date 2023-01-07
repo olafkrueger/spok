@@ -152,7 +152,8 @@
                     v-for="tagName in item.kategorie1TagNames"
                     :key="tagName"
                     x-small
-                    outlined
+                    color="purple"
+                    dark
                     class="ma-1"
                     >{{ tagName }}</v-chip
                   >
@@ -164,7 +165,8 @@
                     v-for="tagName in item.kategorie2TagNames"
                     :key="tagName"
                     x-small
-                    outlined
+                    color="orange"
+                    dark
                     class="ma-1"
                     >{{ tagName }}</v-chip
                   >
@@ -176,7 +178,8 @@
                     v-for="tagName in item.kategorie3TagNames"
                     :key="tagName"
                     x-small
-                    outlined
+                    color="green"
+                    dark
                     class="ma-1"
                     >{{ tagName }}</v-chip
                   >
@@ -188,7 +191,8 @@
                     v-for="tagName in item.kategorie4TagNames"
                     :key="tagName"
                     x-small
-                    outlined
+                    color="blue"
+                    dark
                     class="ma-1"
                     >{{ tagName }}</v-chip
                   >
@@ -200,7 +204,8 @@
                     v-for="tagName in item.kategorie5TagNames"
                     :key="tagName"
                     x-small
-                    outlined
+                    color="red"
+                    dark
                     class="ma-1"
                     >{{ tagName }}</v-chip
                   >
@@ -305,7 +310,7 @@ export default {
       { text: "kategorie4TagNames", value: "kategorie4TagNames" },
       //{ text: "kategorie5", value: "kategorie5" },
       { text: "kategorie5TagNames", value: "kategorie5TagNames" },
-      { text: "kategorie6", value: "kategorie6" },
+      //{ text: "kategorie6", value: "kategorie6" },
       { text: "kategorie6TagNames", value: "kategorie6TagNames" },
     ],
   }),
