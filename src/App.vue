@@ -353,7 +353,7 @@ export default {
       //{ text: "poolId", value: "poolid" },
       { text: "poolTitle", value: "poolTitle" },
       { text: "gameName", value: "name" },
-      //{ text: "description", value: "description" },
+      { text: "description", value: "description", width: 80 },
       //{ text: "kategorie1", value: "kategorie1" },
       { text: "kategorie1TagNames", value: "kategorie1TagNames" },
       //{ text: "kategorie2", value: "kategorie2" },
