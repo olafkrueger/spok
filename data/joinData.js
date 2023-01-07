@@ -11,13 +11,11 @@ async function run() {
   pools.forEach(item => {
     poolsMap.set(item.poolid, item)
   });
+
   const tagListsMap = new Map();
-  const tagListsArray = [];
   tagLists.forEach(item => {
     tagListsMap.set(parseInt(item.uid), item)
-    tagListsArray[parseInt(item.uid)] = item;
   });
-
   //console.log(tagListsMap)
 
 
@@ -29,16 +27,13 @@ async function run() {
     pool = poolsMap.get(item.poolid);
     item.poolTitle = pool.title;
 
-    tagNames = item.kategorie1.split(",").map(uid => {
-      console.log(uid);
-      console.log(tagListsArray[parseInt(uid)]);
-      return tagListsMap.get(parseInt(uid)) === undefined ? "undefined" : tagListsMap.get(parseInt(uid)).listeneintrag;
-      //return tagListsArray[parseInt(uid)]?tagListsArray[parseInt(uid)].listeneintrag:"false";
-      //return foo;
-      
-    });
     //console.log(item.kategorie1.split(","));
-    item.kategorie1Name = tagNames;
+    item.kategorie1TagNames = resolveTagNames(item.kategorie1, tagListsMap);
+    item.kategorie2TagNames = resolveTagNames(item.kategorie2, tagListsMap);
+    item.kategorie3TagNames = resolveTagNames(item.kategorie3, tagListsMap);
+    item.kategorie4TagNames = resolveTagNames(item.kategorie4, tagListsMap);
+    item.kategorie5TagNames = resolveTagNames(item.kategorie5, tagListsMap);
+    item.kategorie6TagNames = resolveTagNames(item.kategorie6, tagListsMap);
   });
 
 
@@ -51,6 +46,11 @@ async function run() {
     games,
     "/home/olaf/github/spok/data/gamesJoined.json"
   );
+}
+
+function resolveTagNames(tagUidsAsString, tagListsMap) {
+  return tagUidsAsString.split(",").map(uid => {
+      return tagListsMap.get(parseInt(uid)) === undefined ? "undefined" : tagListsMap.get(parseInt(uid)).listeneintrag });
 }
 
 function toFile(json, filename) {
