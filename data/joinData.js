@@ -34,6 +34,8 @@ async function run() {
     item.kategorie4TagNames = resolveTagNames(item.kategorie4, tagListsMap);
     item.kategorie5TagNames = resolveTagNames(item.kategorie5, tagListsMap);
     item.kategorie6TagNames = resolveTagNames(item.kategorie6, tagListsMap);
+    item.kategorie7TagNames = resolveTagNames(item.kategorie7, tagListsMap);
+    item.kategorie8TagNames = resolveTagNames(item.kategorie8, tagListsMap);
   });
 
 
@@ -49,7 +51,7 @@ async function run() {
 }
 
 function resolveTagNames(tagUidsAsString, tagListsMap) {
-  return tagUidsAsString.split(",").map(uid => {
+  return !tagUidsAsString?[]:tagUidsAsString.split(",").map(uid => {
       return tagListsMap.get(parseInt(uid)) === undefined ? "undefined" : tagListsMap.get(parseInt(uid)).listeneintrag });
 }
 

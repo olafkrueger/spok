@@ -1,10 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar app style="backdrop-filter: blur(10px)" clipped-right>
-      <v-spacer />
-      <v-divider class="mx-4" vertical />
-    </v-app-bar>
-
     <v-navigation-drawer
       v-model="showPreview"
       app
@@ -225,6 +220,30 @@
                   >
                 </template>
               </template>
+              <template #[`item.kategorie7TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie7TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie7TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
+              <template #[`item.kategorie8TagNames`]="{ item }">
+                <template v-if="Array.isArray(item.kategorie8TagNames)">
+                  <v-chip
+                    v-for="tagName in item.kategorie8TagNames"
+                    :key="tagName"
+                    x-small
+                    outlined
+                    class="ma-1"
+                    >{{ tagName }}</v-chip
+                  >
+                </template>
+              </template>
             </v-data-table>
           </v-card>
         </v-card>
@@ -347,6 +366,32 @@ export default {
         visible: true,
         sort: true,
       },
+      {
+        field: "kategorie7TagNames",
+        title: "kategorie7TagNames",
+        selectedItems: [],
+        selectedItem: "",
+        initialItems: [],
+        reactive: true,
+        exclude: [],
+        items: [],
+        multiple: true,
+        visible: true,
+        sort: true,
+      },
+      {
+        field: "kategorie8TagNames",
+        title: "kategorie8TagNames",
+        selectedItems: [],
+        selectedItem: "",
+        initialItems: [],
+        reactive: true,
+        exclude: [],
+        items: [],
+        multiple: true,
+        visible: true,
+        sort: true,
+      },
     ],
     headers: [
       { text: "gameId", value: "gameid", width: 50 },
@@ -366,6 +411,8 @@ export default {
       { text: "kategorie5TagNames", value: "kategorie5TagNames" },
       //{ text: "kategorie6", value: "kategorie6" },
       { text: "kategorie6TagNames", value: "kategorie6TagNames" },
+      { text: "kategorie7TagNames", value: "kategorie7TagNames" },
+      { text: "kategorie8TagNames", value: "kategorie8TagNames" },
     ],
   }),
   computed: {
@@ -452,7 +499,7 @@ export default {
       this.showPreview = true;
     },
     onResize() {
-      this.tableHeight = window.innerHeight - 480;
+      this.tableHeight = window.innerHeight - 430;
     },
     async fetchWorkOrders() {},
     async fetchStatusEnumeration() {
