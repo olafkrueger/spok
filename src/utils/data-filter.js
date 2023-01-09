@@ -33,30 +33,45 @@ const applyFilters = function (data, filters) {
   let mySelectedValues = [];
 
   let selectedValuesMap = new Map();
+  let hasSelections = false;
+  let _selectedValues;
+  
   filters.forEach((filter) => {
-    selectedValuesMap.set(filter.field, selectedValues(filter));
+    _selectedValues = selectedValues(filter);
+    selectedValuesMap.set(filter.field, _selectedValues);
+    if (_selectedValues.length > 0) {
+      hasSelections = true;
+    }
   });
 
-  return data.filter(function (item) {
+  return hasSelections==false?data:data.filter(function (item) {
     check = true;
     check1 = true;
-    check2 = false; // In case of an array we need to invert the logic because we need to check for an array additionally
+    check2 = true; // In case of an array we need to invert the logic because we need to check for an array additionally
+
     myFields.forEach((field) => {
       mySelectedValues = selectedValuesMap.get(field);
+      
       if (
         mySelectedValues.length > 0 &&
+        !Array.isArray(item[field]) &&
         mySelectedValues.includes(item[field]) == false
       ) {
         check1 = false;
+        //console.log("Match1!")
       }
+      
       if (
         mySelectedValues.length > 0 &&
         Array.isArray(item[field]) &&
-        findCommonElements(mySelectedValues, item[field]) == true
+        findCommonElements(mySelectedValues, item[field]) == false
       ) {
-        check2 = true;
+        check2 = false;
+        //console.log("Match2")
       }
-      if (check1 == false && check2 == false) {
+      // All filters must match, otherwise the item has to be removed!
+      if (check1 == false || check2 == false) {
+        //console.log("Match!")
         check = false;
       }
     });

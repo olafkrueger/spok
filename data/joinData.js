@@ -38,11 +38,7 @@ async function run() {
     item.kategorie8TagNames = resolveTagNames(item.kategorie8, tagListsMap);
   });
 
-
-  /*
-  var striptags = require('striptags');
-  games = striptags(JSON.stringify(games));
-  */ 
+  //games = games.filter(item => item.poolid=="31")
 
   toFile(
     games,
