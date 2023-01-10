@@ -1,4 +1,4 @@
-name: ebase5 Build Client Prod Artifact
+name: Spok Build Client Prod Artifact
 
 on:
   push:
