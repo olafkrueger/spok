@@ -95,7 +95,7 @@
           </v-card>
           <v-card flat>
             <v-card-title>
-              SPOK Daten
+              Daten
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="searchPhrase"
