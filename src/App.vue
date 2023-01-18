@@ -105,6 +105,7 @@
                 hide-details
                 clearable
               ></v-text-field>
+              <v-btn small text @click="downloadAsCSVFile()">Export</v-btn>
             </v-card-title>
             <v-data-table
               v-model="selectedItems"
@@ -443,6 +444,37 @@ export default {
   },
 
   methods: {
+    downloadAsCSVFile() {
+      const { parse } = require("json2csv");
+      let csv;
+      const fields = [
+        "gameid",
+        "poolTitle",
+        "name",
+        "description",
+        "kategorie1TagNames",
+        "kategorie2TagNames",
+        "kategorie3TagNames",
+        "kategorie4TagNames",
+        "kategorie5TagNames",
+        "kategorie6TagNames",
+        "kategorie7TagNames",
+        "kategorie8TagNames",
+      ];
+      const opts = { fields: fields, delimiter: ";" };
+      try {
+        csv = parse(this.gamesFiltered, opts);
+        console.log(csv);
+      } catch (err) {
+        console.error(err);
+      }
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "spok.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    },
     getFilter(field) {
       return this.availableFilters.filter((item) => item.field === field)[0];
     },
