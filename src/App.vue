@@ -462,9 +462,27 @@ export default {
         "kategorie8TagNames",
       ];
       const opts = { fields: fields, delimiter: ";" };
+      const { convert } = require("html-to-text");
       try {
-        csv = parse(this.gamesFiltered, opts);
-        console.log(csv);
+        csv = parse(
+          this.gamesFiltered.map((item) => {
+            return {
+              ...item,
+              description: convert(item.description, {
+                wordwrap: 130,
+              }),
+              kategorie1TagNames: item.kategorie1TagNames.join("\n"),
+              kategorie2TagNames: item.kategorie2TagNames.join("\n"),
+              kategorie3TagNames: item.kategorie3TagNames.join("\n"),
+              kategorie4TagNames: item.kategorie4TagNames.join("\n"),
+              kategorie5TagNames: item.kategorie5TagNames.join("\n"),
+              kategorie6TagNames: item.kategorie6TagNames.join("\n"),
+              kategorie7TagNames: item.kategorie7TagNames.join("\n"),
+              kategorie8TagNames: item.kategorie8TagNames.join("\n"),
+            };
+          }),
+          opts
+        );
       } catch (err) {
         console.error(err);
       }
@@ -479,7 +497,6 @@ export default {
       return this.availableFilters.filter((item) => item.field === field)[0];
     },
     updateAndApplyFilters(field) {
-      console.log("updateAndApplyFilters");
       // Apply filters on work order list
       this.gamesFiltered = dataFilter.applyFilters(
         games,
