@@ -105,7 +105,13 @@
                 hide-details
                 clearable
               ></v-text-field>
-              <v-btn small text @click="downloadAsCSVFile()">Export</v-btn>
+              <v-btn
+                small
+                text
+                :loading="isExporting"
+                @click="downloadAsCSVFile()"
+                >Export as CSV</v-btn
+              >
             </v-card-title>
             <v-data-table
               v-model="selectedItems"
@@ -275,6 +281,7 @@ export default {
     selectedItem: null,
     selectedItems: [],
     tableHeight: null,
+    isExporting: false,
     availableFilters: [
       {
         field: "poolTitle",
@@ -445,6 +452,7 @@ export default {
 
   methods: {
     downloadAsCSVFile() {
+      this.isExporting = true;
       const { parse } = require("json2csv");
       let csv;
       const fields = [
@@ -460,6 +468,7 @@ export default {
         "kategorie6TagNames",
         "kategorie7TagNames",
         "kategorie8TagNames",
+        "kommentar",
       ];
       const opts = { fields: fields, delimiter: ";" };
       const { convert } = require("html-to-text");
@@ -479,12 +488,17 @@ export default {
               kategorie6TagNames: item.kategorie6TagNames.join("\n"),
               kategorie7TagNames: item.kategorie7TagNames.join("\n"),
               kategorie8TagNames: item.kategorie8TagNames.join("\n"),
+              kommentar: convert(item.kommentar, {
+                wordwrap: 130,
+              }),
             };
           }),
           opts
         );
       } catch (err) {
         console.error(err);
+      } finally {
+        this.isExporting = false;
       }
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
@@ -492,6 +506,7 @@ export default {
       link.download = "spok.csv";
       link.click();
       URL.revokeObjectURL(link.href);
+      this.isExporting = false;
     },
     getFilter(field) {
       return this.availableFilters.filter((item) => item.field === field)[0];
